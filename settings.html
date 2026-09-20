@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Deadline Radar</title>
+  <meta name="description" content="Student profile management, preferences, and system settings.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Ambient Living Background -->
+  <div id="ambient-background">
+    <canvas id="particle-canvas"></canvas>
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
+    <div class="glowing-orb orb-3"></div>
+    <div class="floating-academic-objects" id="academic-objects-container"></div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <span style="color:var(--cyan-bright); font-size:1.4rem;">◉</span>
+          <span>Deadline Radar</span>
+        </a>
+        <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar">
+          ⇤
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="deadlines.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📋</span>
+          <span>My Deadlines</span>
+        </a>
+        <a href="#" class="sidebar-link" onclick="window.openAddDeadlineModal(); return false;">
+          <span class="sidebar-link-icon">⚡</span>
+          <span>Add Deadline</span>
+        </a>
+        <a href="calendar.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📅</span>
+          <span>Calendar</span>
+        </a>
+        <a href="radar.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📡</span>
+          <span>Radar</span>
+        </a>
+        <a href="progress.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📈</span>
+          <span>Progress</span>
+        </a>
+        <a href="settings.html" class="sidebar-link active">
+          <span class="sidebar-link-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="settings.html" class="user-profile-badge">
+          <div class="user-avatar" id="sidebar-user-avatar">SS</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-user-name">Shaon Somu</span>
+            <span class="user-role" id="sidebar-user-role">CSE Student</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
+          <div class="header-greeting">
+            <h2>Student Settings ⚙️</h2>
+            <p>Manage your university profile, alert parameters, and workspace preferences.</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-primary" onclick="window.openAddDeadlineModal()">
+            <span>+ Add Deadline</span>
+          </button>
+          <button class="notification-bell-btn" id="notification-bell-btn" title="Notifications">
+            🔔
+            <span class="notification-badge" id="notification-badge-count" style="display:none;">0</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Body -->
+      <div class="page-body">
+        <div style="max-width: 860px; display:flex; flex-direction:column; gap:24px;">
+
+          <!-- Profile Card -->
+          <div class="glass-card" style="padding: 28px;">
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom: 24px;">
+              <div class="user-avatar" id="settings-avatar-preview" style="width:64px; height:64px; font-size:1.4rem;">SS</div>
+              <div>
+                <h3 style="font-size:1.25rem; margin:0;" id="settings-display-name">Shaon Somu</h3>
+                <span style="font-size:0.85rem; color:var(--cyan-bright);" id="settings-display-role">CSE Student • Fall 2026</span>
+              </div>
+            </div>
+
+            <form id="profile-form">
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="setting-name">Full Name</label>
+                  <input type="text" id="setting-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="setting-id">Student ID</label>
+                  <input type="text" id="setting-id" class="form-input" required>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="setting-email">University Email</label>
+                  <input type="email" id="setting-email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="setting-department">Department / Faculty</label>
+                  <input type="text" id="setting-department" class="form-input" required>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="setting-semester">Current Academic Semester</label>
+                  <input type="text" id="setting-semester" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="setting-role">Student Role / Tag</label>
+                  <input type="text" id="setting-role" class="form-input">
+                </div>
+              </div>
+
+              <div style="margin-top: 12px; display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary">
+                  Save Profile Changes
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Preferences Card -->
+          <div class="glass-card" style="padding: 28px;">
+            <h3 style="font-size:1.15rem; margin-bottom:20px;">Radar &amp; Notification Preferences</h3>
+
+            <div style="display:flex; flex-direction:column; gap:18px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
+                <div>
+                  <div style="font-weight:600; color:var(--text-white);">Desktop &amp; In-App Notifications</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">Receive real-time countdown alerts for critical 24h deadlines</div>
+                </div>
+                <input type="checkbox" id="pref-reminders" checked style="width:20px; height:20px; accent-color:var(--cyan-bright); cursor:pointer;">
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
+                <div>
+                  <div style="font-weight:600; color:var(--text-white);">NASA Telemetry Audio Blips</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">Play futuristic synthesizer radar frequency chirp on target acquisition</div>
+                </div>
+                <input type="checkbox" id="pref-audio" checked style="width:20px; height:20px; accent-color:var(--cyan-bright); cursor:pointer;">
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:600; color:var(--text-white);">Dark High-Tech Terminal Theme</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">Deep space navy canvas with glowing cyan accents</div>
+                </div>
+                <span class="badge badge-safe">ACTIVE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Management Card -->
+          <div class="glass-card" style="padding: 28px; border-color: rgba(239, 68, 68, 0.25);">
+            <h3 style="font-size:1.15rem; margin-bottom:12px; color:var(--critical-red);">System Data Maintenance</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">
+              All records are persisted safely in your browser's LocalStorage. You can restore the sample academic semester data anytime.
+            </p>
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button class="btn btn-secondary" onclick="restoreDefaultData()">
+                ↺ Restore Default Semester Data
+              </button>
+              <button class="btn btn-danger" onclick="clearAllData()">
+                ⚠️ Clear All Deadlines
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared Modals -->
+  <div class="modal-overlay" id="add-deadline-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-form-title"><span>⚡</span> Add New Deadline</h3>
+        <button class="modal-close-btn" onclick="window.closeAddDeadlineModal()">✕</button>
+      </div>
+      <form id="deadline-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="input-title">Task Title *</label>
+            <input type="text" id="input-title" class="form-input" placeholder="e.g. Java Assignment" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-course">Course *</label>
+              <input type="text" id="input-course" class="form-input" placeholder="e.g. Object Oriented Programming" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-type">Deadline Type</label>
+              <select id="input-type" class="form-input">
+                <option value="Assignment">Assignment</option>
+                <option value="Class Test">Class Test</option>
+                <option value="Midterm">Midterm</option>
+                <option value="Final Exam">Final Exam</option>
+                <option value="Project">Project</option>
+                <option value="Presentation">Presentation</option>
+                <option value="Lab Report">Lab Report</option>
+                <option value="Quiz">Quiz</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-date">Due Date *</label>
+              <input type="date" id="input-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-time">Due Time</label>
+              <input type="time" id="input-time" class="form-input" value="23:59">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-priority">Priority</label>
+              <select id="input-priority" class="form-input">
+                <option value="High">High Priority</option>
+                <option value="Medium" selected>Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <label class="form-label" for="input-progress">Progress</label>
+                <span id="progress-val-display" style="color:var(--cyan-bright); font-size:0.85rem; font-weight:600;">0%</span>
+              </div>
+              <input type="range" id="input-progress" class="range-slider" min="0" max="100" value="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-desc">Description / Notes</label>
+            <textarea id="input-desc" class="form-input" rows="3" placeholder="Add specific task instructions or notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.closeAddDeadlineModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-submit-btn">Add Deadline</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Drawer Modal -->
+  <div class="modal-overlay" id="notification-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>🔔</span> Notifications</h3>
+        <button class="modal-close-btn" onclick="window.toggleNotificationDrawer()">✕</button>
+      </div>
+      <div class="modal-body" id="notification-list" style="max-height: 400px; overflow-y: auto;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="window.toggleNotificationDrawer()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function loadSettings() {
+      const store = window.RadarStore;
+      const user = store.getUser();
+
+      document.getElementById('setting-name').value = user.fullName || '';
+      document.getElementById('setting-id').value = user.studentId || '';
+      document.getElementById('setting-email').value = user.email || '';
+      document.getElementById('setting-department').value = user.department || '';
+      document.getElementById('setting-semester').value = user.semester || '';
+      document.getElementById('setting-role').value = user.role || '';
+
+      document.getElementById('settings-display-name').textContent = user.fullName;
+      document.getElementById('settings-display-role').textContent = `${user.department} • ${user.semester}`;
+      document.getElementById('settings-avatar-preview').textContent = user.fullName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    }
+
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const updatedUser = {
+        fullName: document.getElementById('setting-name').value.trim(),
+        studentId: document.getElementById('setting-id').value.trim(),
+        email: document.getElementById('setting-email').value.trim(),
+        department: document.getElementById('setting-department').value.trim(),
+        semester: document.getElementById('setting-semester').value.trim(),
+        role: document.getElementById('setting-role').value.trim() || 'CSE Student',
+        avatar: document.getElementById('setting-name').value.trim().split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+      };
+
+      window.RadarStore.saveUser(updatedUser);
+      loadSettings();
+      showToast('Settings Saved', 'Your student profile has been updated successfully.');
+    });
+
+    function restoreDefaultData() {
+      if (confirm('Restore default sample deadlines for the semester? This will reload the 12 coursework tasks.')) {
+        localStorage.removeItem(STORAGE_KEYS.DEADLINES);
+        window.RadarStore.initData();
+        showToast('Data Restored', 'Sample university deadlines restored.');
+      }
+    }
+
+    function clearAllData() {
+      if (confirm('Are you sure you want to clear ALL deadlines? This cannot be undone.')) {
+        window.RadarStore.saveDeadlines([]);
+        showToast('Cleared', 'All deadlines have been removed.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+    });
+  </script>
+</body>
+</html>

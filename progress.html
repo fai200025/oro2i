@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress & Analytics — Deadline Radar</title>
+  <meta name="description" content="Academic progress tracking, category progress, and task distribution analytics.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Ambient Living Background -->
+  <div id="ambient-background">
+    <canvas id="particle-canvas"></canvas>
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
+    <div class="glowing-orb orb-3"></div>
+    <div class="floating-academic-objects" id="academic-objects-container"></div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <span style="color:var(--cyan-bright); font-size:1.4rem;">◉</span>
+          <span>Deadline Radar</span>
+        </a>
+        <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar">
+          ⇤
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="deadlines.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📋</span>
+          <span>My Deadlines</span>
+        </a>
+        <a href="#" class="sidebar-link" onclick="window.openAddDeadlineModal(); return false;">
+          <span class="sidebar-link-icon">⚡</span>
+          <span>Add Deadline</span>
+        </a>
+        <a href="calendar.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📅</span>
+          <span>Calendar</span>
+        </a>
+        <a href="radar.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📡</span>
+          <span>Radar</span>
+        </a>
+        <a href="progress.html" class="sidebar-link active">
+          <span class="sidebar-link-icon">📈</span>
+          <span>Progress</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <span class="sidebar-link-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="settings.html" class="user-profile-badge">
+          <div class="user-avatar" id="sidebar-user-avatar">SS</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-user-name">Shaon Somu</span>
+            <span class="user-role" id="sidebar-user-role">CSE Student</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
+          <div class="header-greeting">
+            <h2>Academic Progress 📈</h2>
+            <p>Semester milestone velocity and category analytics.</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-primary" onclick="window.openAddDeadlineModal()">
+            <span>+ Add Deadline</span>
+          </button>
+          <button class="notification-bell-btn" id="notification-bell-btn" title="Notifications">
+            🔔
+            <span class="notification-badge" id="notification-badge-count" style="display:none;">0</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Body -->
+      <div class="page-body">
+        <!-- 4 Metric Cards -->
+        <section class="stats-grid">
+          <div class="glass-card stat-card total">
+            <div class="stat-info">
+              <span class="stat-label">Total Tasks</span>
+              <span class="stat-value" id="progress-total-val">0</span>
+            </div>
+            <div class="stat-icon-wrapper">🎯</div>
+          </div>
+
+          <div class="glass-card stat-card completed">
+            <div class="stat-info">
+              <span class="stat-label">Completed Tasks</span>
+              <span class="stat-value" id="progress-completed-val">0</span>
+            </div>
+            <div class="stat-icon-wrapper">✓</div>
+          </div>
+
+          <div class="glass-card stat-card pending">
+            <div class="stat-info">
+              <span class="stat-label">Pending Deliverables</span>
+              <span class="stat-value" id="progress-pending-val">0</span>
+            </div>
+            <div class="stat-icon-wrapper">⚡</div>
+          </div>
+
+          <div class="glass-card stat-card overdue">
+            <div class="stat-info">
+              <span class="stat-label">Overdue Items</span>
+              <span class="stat-value" id="progress-overdue-val">0</span>
+            </div>
+            <div class="stat-icon-wrapper">⚠️</div>
+          </div>
+        </section>
+
+        <!-- Analytics Bento: Left Category Bars, Right Donut Distribution -->
+        <div class="progress-analytics-grid">
+          <!-- Category Progress Bars -->
+          <div class="glass-card" style="padding: 24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+              <h3 style="font-size:1.15rem; margin:0;">Category Velocity</h3>
+              <span style="font-size:0.8rem; color:var(--cyan-bright); font-weight:600;">Fall 2026</span>
+            </div>
+
+            <!-- Bar 1: Assignments -->
+            <div class="progress-category-item">
+              <div class="category-header">
+                <span class="category-name">📝 Assignments</span>
+                <span class="category-percent"><span id="text-assignments">0</span>%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="bar-assignments" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Bar 2: Projects -->
+            <div class="progress-category-item">
+              <div class="category-header">
+                <span class="category-name">💻 Semester Projects</span>
+                <span class="category-percent"><span id="text-projects">0</span>%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="bar-projects" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Bar 3: Exams & Class Tests -->
+            <div class="progress-category-item">
+              <div class="category-header">
+                <span class="category-name">🎯 Exams &amp; Class Tests</span>
+                <span class="category-percent"><span id="text-exams">0</span>%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="bar-exams" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Bar 4: Overall Semester Progress -->
+            <div class="progress-category-item" style="border-top:1px solid var(--border-subtle); padding-top:16px; margin-top:16px;">
+              <div class="category-header">
+                <span class="category-name" style="color:var(--cyan-bright); font-weight:700;">🚀 Overall Semester Progress</span>
+                <span class="category-percent" style="color:var(--cyan-bright);"><span id="text-overall">0</span>%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="bar-overall" style="width: 0%; background: linear-gradient(90deg, var(--cyan-bright), var(--electric-blue));"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Donut Chart & Breakdown -->
+          <div class="glass-card" style="padding: 24px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <h3 style="font-size:1.15rem; margin-bottom: 16px; align-self:flex-start;">Task Distribution</h3>
+
+            <div class="donut-chart-container" id="chart-container">
+              <!-- Rendered dynamically by progress.js -->
+            </div>
+
+            <div class="chart-legend-grid">
+              <div class="chart-legend-item">
+                <span class="pulse-dot safe"></span>
+                <span>Completed Tasks</span>
+              </div>
+              <div class="chart-legend-item">
+                <span class="pulse-dot upcoming"></span>
+                <span>Pending Deliverables</span>
+              </div>
+              <div class="chart-legend-item">
+                <span class="pulse-dot critical"></span>
+                <span>Overdue Alert</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared Modals -->
+  <div class="modal-overlay" id="add-deadline-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-form-title"><span>⚡</span> Add New Deadline</h3>
+        <button class="modal-close-btn" onclick="window.closeAddDeadlineModal()">✕</button>
+      </div>
+      <form id="deadline-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="input-title">Task Title *</label>
+            <input type="text" id="input-title" class="form-input" placeholder="e.g. Java Assignment" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-course">Course *</label>
+              <input type="text" id="input-course" class="form-input" placeholder="e.g. Object Oriented Programming" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-type">Deadline Type</label>
+              <select id="input-type" class="form-input">
+                <option value="Assignment">Assignment</option>
+                <option value="Class Test">Class Test</option>
+                <option value="Midterm">Midterm</option>
+                <option value="Final Exam">Final Exam</option>
+                <option value="Project">Project</option>
+                <option value="Presentation">Presentation</option>
+                <option value="Lab Report">Lab Report</option>
+                <option value="Quiz">Quiz</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-date">Due Date *</label>
+              <input type="date" id="input-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-time">Due Time</label>
+              <input type="time" id="input-time" class="form-input" value="23:59">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-priority">Priority</label>
+              <select id="input-priority" class="form-input">
+                <option value="High">High Priority</option>
+                <option value="Medium" selected>Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <label class="form-label" for="input-progress">Progress</label>
+                <span id="progress-val-display" style="color:var(--cyan-bright); font-size:0.85rem; font-weight:600;">0%</span>
+              </div>
+              <input type="range" id="input-progress" class="range-slider" min="0" max="100" value="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-desc">Description / Notes</label>
+            <textarea id="input-desc" class="form-input" rows="3" placeholder="Add specific task instructions or notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.closeAddDeadlineModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-submit-btn">Add Deadline</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Drawer Modal -->
+  <div class="modal-overlay" id="notification-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>🔔</span> Notifications</h3>
+        <button class="modal-close-btn" onclick="window.toggleNotificationDrawer()">✕</button>
+      </div>
+      <div class="modal-body" id="notification-list" style="max-height: 400px; overflow-y: auto;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="window.toggleNotificationDrawer()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/progress.js"></script>
+</body>
+</html>

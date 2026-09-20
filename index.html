@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deadline Radar — Stay Ahead. Never Miss a Deadline.</title>
+  <meta name="description" content="Academic deadline management website designed for university students. Track assignments, exams, projects, and presentations in a futuristic monitoring system.">
+  <meta property="og:title" content="Deadline Radar — Academic Deadline Monitoring System">
+  <meta property="og:description" content="Stay Ahead. Never Miss a Deadline. Track assignments, exams, projects in one intelligent dashboard.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Ambient Living Background -->
+  <div id="ambient-background">
+    <canvas id="particle-canvas"></canvas>
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
+    <div class="glowing-orb orb-3"></div>
+    <div class="floating-academic-objects" id="academic-objects-container"></div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Sticky Navbar -->
+    <nav class="landing-nav" id="main-nav">
+      <div class="nav-container">
+        <a href="#home" class="nav-logo">
+          <span class="nav-logo-icon">◉</span>
+          <span>Deadline Radar</span>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="btn btn-secondary" onclick="openLoginModal()" id="nav-login-btn">
+            Login
+          </button>
+          <a href="dashboard.html" class="btn btn-primary" id="nav-get-started-btn">
+            Get Started
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span class="pulse-dot safe"></span>
+          <span>INTELLIGENT ACADEMIC RADAR</span>
+        </div>
+
+        <h1 class="hero-title animate-hero-text">
+          Never Miss an Academic <span class="hero-highlight">Deadline</span> Again.
+        </h1>
+
+        <p class="hero-subheading">
+          Track assignments, exams, projects, presentations, and every important university deadline in one intelligent, NASA-style dashboard.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="dashboard.html" class="btn btn-primary" id="hero-cta-primary">
+            <span>Launch Dashboard</span>
+            <span>→</span>
+          </a>
+          <a href="#features" class="btn btn-secondary" id="hero-cta-secondary">
+            Explore Features
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Animated Radar & Floating Cards -->
+      <div class="hero-visual-wrapper">
+        <!-- Floating UI Mini Cards -->
+        <div class="floating-ui-card fc-1">
+          <span style="color:var(--critical-red); font-weight:700;">🔴 1 DAY LEFT</span>
+          <div style="color:var(--text-white); font-weight:600; margin-top:2px;">Java Assignment</div>
+        </div>
+
+        <div class="floating-ui-card fc-2">
+          <span style="color:var(--safe-green); font-weight:700;">✓ 7 COMPLETED</span>
+          <div style="color:var(--text-muted); font-size:0.75rem;">This semester</div>
+        </div>
+
+        <div class="floating-ui-card fc-3">
+          <span style="color:var(--upcoming-orange); font-weight:700;">⚡ 4 UPCOMING</span>
+          <div style="color:var(--text-white); font-weight:600; margin-top:2px;">Calculus CT (4d)</div>
+        </div>
+
+        <div class="floating-ui-card fc-4">
+          <span style="color:var(--cyan-bright); font-weight:700;">📅 3 DEADLINES</span>
+          <div style="color:var(--text-muted); font-size:0.75rem;">Scheduled this week</div>
+        </div>
+
+        <!-- Radar Component -->
+        <div class="radar-container" id="hero-radar-container">
+          <div class="radar-ring ring-1"></div>
+          <div class="radar-ring ring-2"></div>
+          <div class="radar-ring ring-3"></div>
+          <div class="radar-ring ring-4"></div>
+
+          <div class="radar-crosshair-h"></div>
+          <div class="radar-crosshair-v"></div>
+          <div class="radar-crosshair-d1"></div>
+          <div class="radar-crosshair-d2"></div>
+
+          <div class="radar-sweep-beam"></div>
+          <div class="radar-center-core"></div>
+
+          <!-- Example Hero Blips -->
+          <!-- Red: Java Assignment (1 Day) -->
+          <div class="radar-blip critical" style="left: 48%; top: 38%;"
+               data-tooltip-title="Java Assignment" data-tooltip-course="OOP" data-tooltip-time="1 DAY REMAINING" data-tooltip-priority="High"></div>
+
+          <!-- Orange: Calculus CT (4 Days) -->
+          <div class="radar-blip upcoming" style="left: 68%; top: 58%;"
+               data-tooltip-title="Calculus CT" data-tooltip-course="Mathematics" data-tooltip-time="4 DAYS REMAINING" data-tooltip-priority="High"></div>
+
+          <!-- Green: Web Project (10 Days) -->
+          <div class="radar-blip safe" style="left: 26%; top: 72%;"
+               data-tooltip-title="Web Project" data-tooltip-course="Internet Programming" data-tooltip-time="10 DAYS REMAINING" data-tooltip-priority="Medium"></div>
+
+          <!-- Tooltip element -->
+          <div class="radar-tooltip" id="hero-radar-tooltip"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section-container" id="features">
+      <div class="section-header">
+        <span class="section-tag">// PRODUCTIVITY ARSENAL</span>
+        <h2 class="section-title">Everything You Need to Stay Ahead</h2>
+        <p class="section-desc">Engineered specifically for university engineering, science, and business students managing rigorous coursework.</p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="glass-card feature-card tilt-card" id="feature-card-1">
+          <div class="feature-icon-wrapper">🎯</div>
+          <h3 class="feature-title">Smart Deadline Tracking</h3>
+          <p class="feature-desc">Add and manage assignments, exams, projects, class tests, and every academic deadline with automatic progress monitoring.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-card feature-card tilt-card" id="feature-card-2">
+          <div class="feature-icon-wrapper">⚡</div>
+          <h3 class="feature-title">Priority Detection</h3>
+          <p class="feature-desc">Automatically classify deadlines into Critical (0–2 days), Upcoming (3–7 days), or Safe (>7 days) with intelligent urgency alerts.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-card feature-card tilt-card" id="feature-card-3">
+          <div class="feature-icon-wrapper">📡</div>
+          <h3 class="feature-title">Deadline Radar</h3>
+          <p class="feature-desc">Visualize your academic workload on an interactive, polar-coordinate radar where imminent deliverables orbit closest to the core.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="glass-card feature-card tilt-card" id="feature-card-4">
+          <div class="feature-icon-wrapper">📅</div>
+          <h3 class="feature-title">Calendar View</h3>
+          <p class="feature-desc">See all deadlines beautifully organized on a monthly dark calendar with color-coded glowing badges for quick scheduling.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="glass-card feature-card tilt-card" id="feature-card-5">
+          <div class="feature-icon-wrapper">📊</div>
+          <h3 class="feature-title">Progress Tracking</h3>
+          <p class="feature-desc">Track completed, pending, and overdue tasks with automated category analytics, visual donut charts, and semester milestones.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="glass-card feature-card tilt-card" id="feature-card-6">
+          <div class="feature-icon-wrapper">🧭</div>
+          <h3 class="feature-title">Daily Focus</h3>
+          <p class="feature-desc">Automatically identify the most urgent tasks for today so you always know what to execute next without mental fatigue.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section-container" id="how-it-works">
+      <div class="section-header">
+        <span class="section-tag">// THREE STEPS TO MASTERY</span>
+        <h2 class="section-title">How Deadline Radar Works</h2>
+        <p class="section-desc">Streamline your academic semester from syllabus distribution to final exams in three effortless steps.</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="timeline-bar"></div>
+
+        <div class="glass-card step-card" id="step-card-1">
+          <div class="step-number">01</div>
+          <h3 class="step-title">Add Your Deadline</h3>
+          <p class="step-desc">Enter the course, task name, deadline type, due date, time, and initial progress in seconds.</p>
+        </div>
+
+        <div class="glass-card step-card" id="step-card-2">
+          <div class="step-number">02</div>
+          <h3 class="step-title">Deadline Radar Organizes It</h3>
+          <p class="step-desc">The system calculates remaining time down to the exact second, plots proximity coordinates, and establishes priority levels.</p>
+        </div>
+
+        <div class="glass-card step-card" id="step-card-3">
+          <div class="step-number">03</div>
+          <h3 class="step-title">Stay Ahead</h3>
+          <p class="step-desc">Use the dashboard, interactive radar, calendar, and daily focus list to crush deliverables before they become crises.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section-container" id="about">
+      <div class="glass-card" style="padding: 48px; border-color: rgba(0,240,255,0.25); text-align: center;">
+        <span class="section-tag">// MISSION STATEMENT</span>
+        <h2 style="font-size: 2.2rem; margin-bottom: 16px;">Built for University Students, By University Students</h2>
+        <p style="max-width: 720px; margin: 0 auto 32px; color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;">
+          University coursework moves fast: concurrent lab reports, unexpected class tests, semester projects, and exam schedules create cognitive overload. Deadline Radar provides a calm, futuristic visual monitoring interface that keeps you in command of your academic journey.
+        </p>
+        <a href="dashboard.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.05rem;">
+          Enter System Terminal
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="nav-logo-icon">◉</span>
+            <span>Deadline Radar</span>
+          </div>
+          <div class="footer-tagline">“Stay Ahead. Never Miss a Deadline.”</div>
+        </div>
+
+        <div style="color: var(--text-dim); font-size: 0.85rem;">
+          CSE Semester Project • Built with HTML, CSS, Vanilla JavaScript
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>◉</span> Student Authentication</h3>
+        <button class="modal-close-btn" onclick="closeLoginModal()">✕</button>
+      </div>
+      <form id="login-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Student ID or Email</label>
+            <input type="text" id="login-email" class="form-input" placeholder="e.g. 2023-1-60-042 or somushaon@gmail.com" required value="somushaon@gmail.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required value="student123">
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
+            <a href="#" onclick="alert('Password reset link simulated to university inbox.'); return false;" style="color:var(--cyan-bright); text-decoration:none;">Forgot Password?</a>
+            <a href="#" onclick="switchAuthMode('register'); return false;" style="color:var(--text-muted); text-decoration:none;">Create Account →</a>
+          </div>
+
+          <!-- Google Sign-in simulation button -->
+          <div style="margin-top: 10px;">
+            <button type="button" class="btn btn-secondary" style="width:100%;" onclick="simulateGoogleLogin()">
+              <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:8px;"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/></svg>
+              Continue with Google
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeLoginModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Login to Dashboard</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal-overlay" id="register-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>◉</span> Create Student Account</h3>
+        <button class="modal-close-btn" onclick="closeRegisterModal()">✕</button>
+      </div>
+      <form id="register-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Full Name</label>
+            <input type="text" id="reg-name" class="form-input" placeholder="e.g. Shaon Somu" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="reg-id">Student ID</label>
+              <input type="text" id="reg-id" class="form-input" placeholder="e.g. 2023-1-60-042" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-email">University Email</label>
+              <input type="email" id="reg-email" class="form-input" placeholder="student@university.edu" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="reg-dept">Department</label>
+              <input type="text" id="reg-dept" class="form-input" placeholder="Computer Science & Engineering" value="Computer Science & Engineering">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-semester">Semester</label>
+              <input type="text" id="reg-semester" class="form-input" placeholder="Fall 2026" value="Fall 2026">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="reg-pass">Password</label>
+              <input type="password" id="reg-pass" class="form-input" placeholder="6+ characters" minlength="6" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-confirm">Confirm Password</label>
+              <input type="password" id="reg-confirm" class="form-input" placeholder="Repeat password" required>
+            </div>
+          </div>
+
+          <div style="font-size:0.82rem; text-align:right;">
+            <a href="#" onclick="switchAuthMode('login'); return false;" style="color:var(--cyan-bright); text-decoration:none;">Already have an account? Log In →</a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeRegisterModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Landing Page Specific Scripting
+    function openLoginModal() {
+      document.getElementById('login-modal').classList.add('active');
+    }
+    function closeLoginModal() {
+      document.getElementById('login-modal').classList.remove('active');
+    }
+    function openRegisterModal() {
+      document.getElementById('register-modal').classList.add('active');
+    }
+    function closeRegisterModal() {
+      document.getElementById('register-modal').classList.remove('active');
+    }
+    function switchAuthMode(mode) {
+      if (mode === 'register') {
+        closeLoginModal();
+        openRegisterModal();
+      } else {
+        closeRegisterModal();
+        openLoginModal();
+      }
+    }
+
+    // Google Sign-In Simulation
+    function simulateGoogleLogin() {
+      const user = window.RadarStore.getUser();
+      showToast('Google Sign-In', `Welcome back, ${user.fullName}! Redirecting to dashboard...`);
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 800);
+    }
+
+    // Auth Form Handlers
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailOrId = document.getElementById('login-email').value.trim();
+      const user = window.RadarStore.getUser();
+      showToast('Authenticated', `Welcome back, ${user.fullName.split(' ')[0]}!`);
+      closeLoginModal();
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 700);
+    });
+
+    document.getElementById('register-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const studentId = document.getElementById('reg-id').value.trim();
+      const dept = document.getElementById('reg-dept').value.trim();
+      const semester = document.getElementById('reg-semester').value.trim();
+      const pass = document.getElementById('reg-pass').value;
+      const confirm = document.getElementById('reg-confirm').value;
+
+      if (pass !== confirm) {
+        alert('Passwords do not match! Please check and try again.');
+        return;
+      }
+
+      window.RadarStore.saveUser({
+        fullName: name,
+        email: email,
+        studentId: studentId,
+        department: dept,
+        semester: semester,
+        role: `${dept.split(' ')[0]} Student`,
+        avatar: name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+      });
+
+      showToast('Account Created', 'Registration successful! Launching your radar dashboard.');
+      closeRegisterModal();
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 800);
+    });
+
+    // Hero Radar Blip Tooltips
+    const heroBlips = document.querySelectorAll('#hero-radar-container .radar-blip');
+    const heroTooltip = document.getElementById('hero-radar-tooltip');
+    heroBlips.forEach(blip => {
+      blip.addEventListener('mouseenter', (e) => {
+        const title = blip.getAttribute('data-tooltip-title');
+        const course = blip.getAttribute('data-tooltip-course');
+        const time = blip.getAttribute('data-tooltip-time');
+        const priority = blip.getAttribute('data-tooltip-priority');
+
+        heroTooltip.innerHTML = `
+          <h5>${title}</h5>
+          <p><strong>Course:</strong> ${course}</p>
+          <p><strong>Remaining:</strong> ${time}</p>
+          <p><strong>Priority:</strong> ${priority}</p>
+        `;
+        heroTooltip.style.left = blip.style.left;
+        heroTooltip.style.top = blip.style.top;
+        heroTooltip.classList.add('show');
+      });
+
+      blip.addEventListener('mouseleave', () => {
+        heroTooltip.classList.remove('show');
+      });
+    });
+
+    // Active Navigation Highlighting on Scroll
+    window.addEventListener('scroll', () => {
+      const sections = ['home', 'features', 'how-it-works', 'about'];
+      const scrollPos = window.scrollY + 200;
+      sections.forEach(secId => {
+        const el = document.getElementById(secId);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === `#${secId}`);
+            });
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

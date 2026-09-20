@@ -1,0 +1,6 @@
+{
+  "name": "Deadline Radar",
+  "description": "Academic deadline management system for university students. Stay Ahead. Never Miss a Deadline.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

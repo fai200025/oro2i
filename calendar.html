@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar — Deadline Radar</title>
+  <meta name="description" content="Monthly academic calendar view with glowing deadline markers.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Ambient Living Background -->
+  <div id="ambient-background">
+    <canvas id="particle-canvas"></canvas>
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
+    <div class="glowing-orb orb-3"></div>
+    <div class="floating-academic-objects" id="academic-objects-container"></div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <span style="color:var(--cyan-bright); font-size:1.4rem;">◉</span>
+          <span>Deadline Radar</span>
+        </a>
+        <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar">
+          ⇤
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="deadlines.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📋</span>
+          <span>My Deadlines</span>
+        </a>
+        <a href="#" class="sidebar-link" onclick="window.openAddDeadlineModal(); return false;">
+          <span class="sidebar-link-icon">⚡</span>
+          <span>Add Deadline</span>
+        </a>
+        <a href="calendar.html" class="sidebar-link active">
+          <span class="sidebar-link-icon">📅</span>
+          <span>Calendar</span>
+        </a>
+        <a href="radar.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📡</span>
+          <span>Radar</span>
+        </a>
+        <a href="progress.html" class="sidebar-link">
+          <span class="sidebar-link-icon">📈</span>
+          <span>Progress</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <span class="sidebar-link-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="settings.html" class="user-profile-badge">
+          <div class="user-avatar" id="sidebar-user-avatar">SS</div>
+          <div class="user-info">
+            <span class="user-name" id="sidebar-user-name">Shaon Somu</span>
+            <span class="user-role" id="sidebar-user-role">CSE Student</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
+          <div class="header-greeting">
+            <h2>Academic Calendar 📅</h2>
+            <p>Schedule view of all coursework deadlines and examination dates.</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-primary" onclick="window.openAddDeadlineModal()">
+            <span>+ Add Deadline</span>
+          </button>
+          <button class="notification-bell-btn" id="notification-bell-btn" title="Notifications">
+            🔔
+            <span class="notification-badge" id="notification-badge-count" style="display:none;">0</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Body -->
+      <div class="page-body">
+        <div class="glass-card calendar-wrapper">
+          <!-- Calendar Toolbar -->
+          <div class="calendar-header-bar">
+            <h3 class="calendar-month-title" id="calendar-month-year">September 2026</h3>
+            <div class="calendar-nav-controls">
+              <button class="btn btn-secondary" id="cal-prev-btn" style="padding:6px 14px;">‹ Prev</button>
+              <button class="btn btn-secondary" id="cal-today-btn" style="padding:6px 14px;">Today</button>
+              <button class="btn btn-secondary" id="cal-next-btn" style="padding:6px 14px;">Next ›</button>
+            </div>
+          </div>
+
+          <!-- Calendar Grid -->
+          <div class="calendar-grid" id="calendar-grid-body">
+            <!-- Populated dynamically by calendar.js -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared Modals -->
+  <div class="modal-overlay" id="add-deadline-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-form-title"><span>⚡</span> Add New Deadline</h3>
+        <button class="modal-close-btn" onclick="window.closeAddDeadlineModal()">✕</button>
+      </div>
+      <form id="deadline-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="input-title">Task Title *</label>
+            <input type="text" id="input-title" class="form-input" placeholder="e.g. Java Assignment" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-course">Course *</label>
+              <input type="text" id="input-course" class="form-input" placeholder="e.g. Object Oriented Programming" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-type">Deadline Type</label>
+              <select id="input-type" class="form-input">
+                <option value="Assignment">Assignment</option>
+                <option value="Class Test">Class Test</option>
+                <option value="Midterm">Midterm</option>
+                <option value="Final Exam">Final Exam</option>
+                <option value="Project">Project</option>
+                <option value="Presentation">Presentation</option>
+                <option value="Lab Report">Lab Report</option>
+                <option value="Quiz">Quiz</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-date">Due Date *</label>
+              <input type="date" id="input-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-time">Due Time</label>
+              <input type="time" id="input-time" class="form-input" value="23:59">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-priority">Priority</label>
+              <select id="input-priority" class="form-input">
+                <option value="High">High Priority</option>
+                <option value="Medium" selected>Medium Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <label class="form-label" for="input-progress">Progress</label>
+                <span id="progress-val-display" style="color:var(--cyan-bright); font-size:0.85rem; font-weight:600;">0%</span>
+              </div>
+              <input type="range" id="input-progress" class="range-slider" min="0" max="100" value="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-desc">Description / Notes</label>
+            <textarea id="input-desc" class="form-input" rows="3" placeholder="Add specific task instructions or notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.closeAddDeadlineModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-submit-btn">Add Deadline</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div class="modal-overlay" id="details-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>📋</span> Deadline Details</h3>
+        <button class="modal-close-btn" onclick="window.closeDetailsModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <h2 id="details-title" style="font-size:1.4rem; color:var(--text-white); margin-bottom:4px;">Task Title</h2>
+          <span id="details-course" style="color:var(--cyan-bright); font-size:0.9rem; font-weight:600;">Course Name</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:rgba(2,6,23,0.7); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-subtle);">
+          <div>
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Type</span>
+            <div id="details-type" style="font-weight:600; font-size:0.9rem;">Assignment</div>
+          </div>
+          <div>
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Priority</span>
+            <div id="details-priority" style="font-weight:600; font-size:0.9rem;">High</div>
+          </div>
+          <div>
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Due</span>
+            <div id="details-due" style="font-weight:600; font-size:0.85rem;">Sep 16, 2026 — 11:59 PM</div>
+          </div>
+          <div>
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Status</span>
+            <div id="details-remaining" style="font-weight:700; font-size:0.85rem; color:var(--cyan-bright);">1 Day Remaining</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
+            <span class="text-muted">Completion Progress</span>
+            <span id="details-progress" style="color:var(--cyan-bright); font-weight:700;">80%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="details-progressbar" class="progress-bar-fill" style="width: 80%;"></div>
+          </div>
+        </div>
+
+        <div>
+          <span style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Description</span>
+          <p id="details-desc" style="color:var(--text-white); font-size:0.9rem; margin-top:4px; line-height:1.6; background:rgba(2,6,23,0.5); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-subtle);">
+            Details description...
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between;">
+        <button type="button" class="btn btn-danger" id="details-delete-btn">Delete</button>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-secondary" id="details-edit-btn">Edit</button>
+          <button type="button" class="btn btn-primary" id="details-complete-btn">Mark Complete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Drawer Modal -->
+  <div class="modal-overlay" id="notification-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>🔔</span> Notifications</h3>
+        <button class="modal-close-btn" onclick="window.toggleNotificationDrawer()">✕</button>
+      </div>
+      <div class="modal-body" id="notification-list" style="max-height: 400px; overflow-y: auto;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="window.toggleNotificationDrawer()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/calendar.js"></script>
+</body>
+</html>
